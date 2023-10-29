@@ -1,0 +1,14 @@
+.depend
+*.o
+*.d
+*~
+test.file*
+read-file
+time.*
+log
+#
+# to create empty directory and add it to repository:
+# mkdir log
+# and put following .gitignore file
+# *
+# !.gitignore
