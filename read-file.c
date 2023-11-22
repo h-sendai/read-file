@@ -145,6 +145,10 @@ int child_proc(char *filename, int bufsize)
         if (n < 0) {
             err(1, "read for %s", filename);
         }
+        if (n != bufsize) {
+            fprintf(stderr, "partial read\n");
+        }
+
         total_read_bytes += n;
         if (opts.record_time) {
             gettimeofday(&time_record[time_record_index].tv, NULL);
