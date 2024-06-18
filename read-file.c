@@ -32,7 +32,8 @@ struct {
     int fadv_random;
     int record_time;
     long target_read_bytes;
-} opts = { 0, 0, 0, 0, 0, 0, 0 };
+    int sleep_usec;
+} opts = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
 struct time_record {
     struct timeval tv;
@@ -51,6 +52,7 @@ int usage()
                  "    -D (dont-drop-page-cache)\n"
                  "    -n total_read_bytes (exit after read this bytes)\n"
                  "    -t record_time (filename: time.<pid>)\n"
+                 "    -u sleep_usec (default: don't sleep after every read())\n"
                  "If not -D option is not specified, drop page cache before read()\n"
                  "-s and -r are mutually exclusive\n";
     fprintf(stderr, "%s", msg);
@@ -161,6 +163,10 @@ int child_proc(char *filename, int bufsize)
                 break;
             }
         }
+        
+        if (opts.sleep_usec > 0) {
+            usleep(opts.sleep_usec);
+        }
     }
     gettimeofday(&tv1, NULL);
     timersub(&tv1, &tv0, &elapsed);
@@ -192,7 +198,7 @@ int main(int argc, char *argv[])
 {
     long bufsize = 64*1024;
     int c;
-    while ( (c = getopt(argc, argv, "hb:dDin:srt")) != -1) {
+    while ( (c = getopt(argc, argv, "hb:dDin:srtu:")) != -1) {
         switch (c) {
             case 'h':
                 usage();
@@ -221,6 +227,9 @@ int main(int argc, char *argv[])
                 break;
             case 't':
                 opts.record_time = 1;
+                break;
+            case 'u':
+                opts.sleep_usec = get_num(optarg);
                 break;
             default:
                 break;

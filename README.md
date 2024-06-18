@@ -7,7 +7,7 @@ read()するまえにページキャッシュを消している（drop-page-cach
 ## Usage
 
 ```
-./read-file [-i] [-s | -r] [-D] [-t] [-b bufsize (64kB)] [-n total_read_size] filename
+./read-file [-i] [-s | -r] [-D] [-t] [-b bufsize (64kB)] [-n total_read_size] [-u sleep_usec] filename
 -D: ファイルを読み始めるまえにページキャッシュをドロップしない
 -i: O_DIRECTでopenする(読み出しデータをキャッシュしない)
 -s: posix_fadvise(fd, 0, 0, POSIX_FADV_SEQUENTIAL): readaheadサイズを通常の2倍にする
@@ -15,6 +15,7 @@ read()するまえにページキャッシュを消している（drop-page-cach
 -t: read()後の時刻を記録して、ファイル読み出し終了後time.<parent_pid>.<proc_num>ファイルに出力する。
 -n: 読み出すバイト数。デフォルトはファイル全部を読む。
 -b: read()のバッファサイズ。デフォルト64kB (catと同じにした）
+-u sleep_usec: 毎回のread()のあとにusleep(sleep_usec)する
 ```
 
 [posix_fadvise(2) man page](https://man7.org/linux/man-pages/man2/posix_fadvise.2.html)
