@@ -1,6 +1,6 @@
 # read-file
 
-単一プロセスで同時にファイルを読むときの読み出し速度の計測。
+ファイルを読むときの読み出し速度の計測。
 
 read()するまえにページキャッシュを消している（drop-page-cache.c）
 
@@ -27,6 +27,7 @@ read()するまえにページキャッシュを消している（drop-page-cach
 
 ## fdisk
 
+```console
 /dev/sde (HGST HDN724040ALE640 4TB)
 
 sde1 200G 
@@ -61,6 +62,7 @@ RO    RA   SSZ   BSZ        StartSec            Size   Device
 rw   256   512  4096       419432448    214748364800   /dev/sde2
 % cat /sys/block/sde/queue/read_ahead_kb
 128
+```
 
 sde1, sde2とも128kBである。
 
@@ -74,6 +76,7 @@ dd if=/dev/urandom of=test.file.1 bs=1024k count=1024
 
 デフォルトとfadvise(POSIX_SEQUENTIAL)で64MBファイルを読んでみる。
 
+```console
 % ./read-file -n 64m /xfs/sendai/test.file.1
 169.832 MB/s 67108864 bytes 0.376844 sec /xfs/sendai/test.file.1
 % ./read-file -s -n 64m /xfs/sendai/test.file.2
@@ -82,6 +85,7 @@ dd if=/dev/urandom of=test.file.1 bs=1024k count=1024
 157.850 MB/s 67108864 bytes 0.405449 sec /ext4/sendai/test.file.2
 % ./read-file -n 64m /ext4/sendai/test.file.1
 163.585 MB/s 67108864 bytes 0.391233 sec /ext4/sendai/test.file.1
+```
 
 読んだあとfincoreでページキャッシュの量を確認。
 
